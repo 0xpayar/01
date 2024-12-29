@@ -1,0 +1,92 @@
+https://github.com/aptos-labs/aptos-core/releases?q=wallet&expanded=true
+
+____
+1_ sudo apt update && sudo apt upgrade -y
+2_ sudo apt-get install jq unzip -y
+3_ sudo apt install screen
+4_ apt install git
+5_ apt install cargo
+6_ git clone https://github.com/aptos-labs/aptos-core.git
+7_ cd aptos-core
+8_ ./scripts/dev_setup.sh
+9_ source ~/.cargo/env
+10_ cargo install --git https://github.com/aptos-labs/aptos-core.git aptos --branch testnet
+11_ git checkout --track origin/testnet
+12_ export WORKSPACE=testnet
+export USERNAME=XXXXXXXX
+mkdir ~/$WORKSPACE
+13_ aptos genesis generate-keys --output-dir ~/$WORKSPACE/keys
+14_ sudo nano /root/testnet/keys/public-keys.yaml
+15_ sudo nano /root/testnet/keys/private-keys.yaml
+16_ sudo nano /root/testnet/keys/validator-identity.yaml
+17_ sudo nano /root/testnet/keys/validator-full-node-identity.yaml
+18_ aptos genesis set-validator-configuration \
+    --local-repository-dir ~/$WORKSPACE \
+    --username xxxxxxxxx \
+    --owner-public-identity-file ~/$WORKSPACE/keys/public-keys.yaml \
+    --validator-host 35.232.235.205:6180 \
+    --full-node-host 34.135.169.144:6182 \
+    --stake-amount 100000000000000
+
+19_ sudo nano /root/testnet/xxxxxxx/operator.yaml
+
+20_ sudo nano /root/testnet/xxxxxxx/owner.yaml
+
+21_ aptos genesis generate-layout-template --output-file ~/$WORKSPACE/layout.yaml
+
+22_ vi ~/$WORKSPACE/layout.yaml
+
+root_key: "D04470F43AB6AEAA4EB616B72128881EEF77346F2075FFE68E14BA7DEBD8095E"
+users: ["xxxxxxxxxx"]
+chain_id: 43
+allow_new_validators: false
+epoch_duration_secs: 7200
+is_test: true
+min_stake: 100000000000000
+min_voting_threshold: 100000000000000
+max_stake: 100000000000000000
+recurring_lockup_duration_secs: 86400
+required_proposer_stake: 100000000000000
+rewards_apy_percentage: 10
+voting_duration_secs: 43200
+voting_power_increase_limit: 20
+
+
+_ :w
+_ :q
+23_ cargo run --package framework -- release
+cp head.mrb ~/$WORKSPACE/framework.mrb
+
+24_ aptos genesis generate-genesis --local-repository-dir ~/$WORKSPACE --output-dir ~/$WORKSPACE
+
+25_ mkdir ~/$WORKSPACE/config
+cp docker/compose/aptos-node/validator.yaml ~/$WORKSPACE/validator.yaml
+cp docker/compose/aptos-node/fullnode.yaml ~/$WORKSPACE/fullnode.yaml
+
+26_ sudo nano /root/testnet/validator.yaml
+/root/testnet/
+/root/testnet/keys/
+
+27_ cd $home
+
+28_ 
+apt install ufw -y 
+ufw allow ssh 
+ufw allow https 
+ufw allow http 
+ufw allow 6180 
+ufw allow 80 
+ufw allow 9101 
+ufw allow 181 
+ufw allow 182 
+ufw allow 8080 
+ufw allow 9103 
+ufw enable
+
+29_ cd aptos-core
+30_ screen -S aptos-core
+31_ cargo run -p aptos-node --release -- -f ~/testnet/validator.yaml
+
+_ Press Ctrl+A then D
+
+https://ait.aptos-node.info/
